@@ -1,0 +1,11 @@
+[package]
+name = "lindera-cc-cedict-builder"
+version = "0.1.0"
+authors = ["Minoru Osuka <minoru.osuka@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+
+[[bin]]
+name = "lindera-cc-cedict"
+path = "src/main.rs"
