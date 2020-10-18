@@ -5,9 +5,14 @@ authors = ["Minoru Osuka <minoru.osuka@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+lindera-core = { git = "https://github.com/you06/lindera", branch = "pub-functions" }
+lindera-ipadic-builder = { git = "https://github.com/you06/lindera", branch = "pub-functions" }
 clap = "2.33.3"
-regex = "1.3.9"
+regex = "1.4.1"
 unicode-segmentation = "1.6.0"
+bincode = "1.3.1"
+byteorder = "1.3.4"
+yada = "0.4.0"
 
 [[bin]]
 name = "lindera-cc-cedict"

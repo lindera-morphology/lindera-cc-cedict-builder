@@ -6,9 +6,6 @@ mod error;
 mod lindera;
 mod mecab;
 
-use lindera::build_lindera;
-use mecab::build_mecab;
-
 fn main() {
     let matches = App::new(crate_name!())
         .setting(AppSettings::DeriveDisplayOrder)
@@ -36,23 +33,23 @@ fn main() {
         .subcommand(SubCommand::with_name("lindera-cc-cedict"))
         .get_matches();
 
-    if let Some(_) = matches.subcommand_matches("mecab-cc-cedict") {
-        match build_mecab(
+    if matches.subcommand_matches("mecab-cc-cedict").is_some() {
+        match mecab::build(
             matches.value_of("INPUT_DIR").unwrap(),
             matches.value_of("OUTPUT_DIR").unwrap(),
         ) {
             Ok(()) => println!("done"),
-            Err(msg) => println!("{}", msg),
+            Err(msg) => println!("{:?}", msg),
         }
     }
 
-    if let Some(_) = matches.subcommand_matches("lindera-cc-cedict") {
-        match build_lindera(
+    if matches.subcommand_matches("lindera-cc-cedict").is_some() {
+        match lindera::build(
             matches.value_of("INPUT_DIR").unwrap(),
             matches.value_of("OUTPUT_DIR").unwrap(),
         ) {
             Ok(()) => println!("done"),
-            Err(msg) => println!("{}", msg),
+            Err(msg) => println!("{:?}", msg),
         }
     }
 }
