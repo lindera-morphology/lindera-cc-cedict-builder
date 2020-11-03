@@ -174,7 +174,6 @@ dependencies = [
 [[package]]
 name = "lindera-core"
 version = "0.7.1"
-source = "git+https://github.com/you06/lindera?branch=pub-functions#bd852deb74adeeb8718135f13e550ae54d2899ee"
 dependencies = [
  "bincode",
  "byteorder",
@@ -186,7 +185,6 @@ dependencies = [
 [[package]]
 name = "lindera-ipadic-builder"
 version = "0.7.1"
-source = "git+https://github.com/you06/lindera?branch=pub-functions#bd852deb74adeeb8718135f13e550ae54d2899ee"
 dependencies = [
  "bincode",
  "byteorder",

@@ -28,7 +28,7 @@ impl<'a> Lindera<'a> {
         let mut word_entry_map: BTreeMap<String, Vec<WordEntry>> = BTreeMap::new();
 
         for (word_id, word) in self.mecab.words.iter().enumerate() {
-            if word.word_cost < i16::MIN as i64 {
+            if word.word_cost < i16::MIN as i32 {
                 println!(
                     "{}'s cost is {}, less than i16::MIN",
                     word.word, word.word_cost
@@ -103,7 +103,7 @@ impl<'a> Lindera<'a> {
 
     fn build_cost_matrix(&self, output_dir: &str) -> Result<()> {
         let mut lines = Vec::new();
-        let matrix_def = std::str::from_utf8(self.mecab.matric_def)?;
+        let matrix_def = std::str::from_utf8("".as_bytes())?;
         for line in matrix_def.lines() {
             let fields: Vec<i32> = line
                 .split_whitespace()

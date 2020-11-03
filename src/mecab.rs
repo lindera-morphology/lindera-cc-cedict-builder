@@ -8,7 +8,6 @@ use unicode_segmentation::UnicodeSegmentation;
 
 use super::error::Result;
 
-const MATRIX_DEF: &[u8] = include_bytes!("./static/matrix.def");
 const UNK_DEF: &[u8] = include_bytes!("./static/unk.def");
 const CHAR_DEF: &[u8] = include_bytes!("./static/char.def");
 const DICRC: &[u8] = include_bytes!("./static/dicrc");
@@ -29,7 +28,7 @@ pub struct Word<'a> {
     pub word: &'a str,
     pub left_id: u32,
     pub right_id: u32,
-    pub word_cost: i64,
+    pub word_cost: i32,
     pub traditional: &'a str,
     pub simplified: &'a str,
     pub pinyin: &'a str,
@@ -52,9 +51,35 @@ impl<'a> Word<'a> {
     }
 }
 
+pub struct Matrix<'a> {
+    l_size: u32,
+    r_size: u32,
+    l_index: u32,
+    r_index: u32,
+    words: &'a Vec<Word<'a>>,
+}
+
+impl<'a> Iterator for Matrix<'a> {
+    type Item = (u32, u32, i32);
+    fn next(&mut self) -> Option<(u32, u32, i32)> {
+        if self.l_index == self.l_size {
+            return None;
+        }
+        let lword = &self.words[self.l_index as usize];
+        let rword = &self.words[self.r_index as usize];
+        let cost = (lword.word_cost + rword.word_cost) / 10;
+        let result = (self.l_index, self.r_index, cost);
+        self.r_index += 1;
+        if self.r_index == self.r_size {
+            self.r_index = 0;
+            self.l_index += 1;
+        }
+        Some(result)
+    }
+}
+
 pub struct Mecab<'a> {
     pub words: Vec<Word<'a>>,
-    pub matric_def: &'static [u8],
     pub unk_def: &'static [u8],
     pub char_def: &'static [u8],
     pub dicrc: &'static [u8],
@@ -64,7 +89,6 @@ impl<'a> Mecab<'a> {
     fn new() -> Mecab<'a> {
         Mecab {
             words: Vec::new(),
-            matric_def: MATRIX_DEF,
             unk_def: UNK_DEF,
             char_def: CHAR_DEF,
             dicrc: DICRC,
@@ -94,7 +118,7 @@ impl<'a> Mecab<'a> {
                 );
                 let word_cost = max(
                     -36000,
-                    (-400f64 * (traditional.graphemes(true).count() as f64).powf(1.5)) as i64,
+                    (-400f64 * (traditional.graphemes(true).count() as f64).powf(1.5)) as i32,
                 );
 
                 mecab.words.push(Word {
@@ -126,6 +150,17 @@ impl<'a> Mecab<'a> {
         mecab
     }
 
+    pub fn matrix(&self) -> Matrix {
+        let size = self.words.len() as u32;
+        Matrix {
+            l_size: size,
+            r_size: size,
+            l_index: 0,
+            r_index: 0,
+            words: &self.words,
+        }
+    }
+
     fn to_csv(&self, output_dir: &str) -> Result<()> {
         let mut wtr = io::LineWriter::new(File::create(
             Path::new(output_dir).join(Path::new("cedict.csv")),
@@ -141,7 +176,12 @@ impl<'a> Mecab<'a> {
         let mut wtr = io::LineWriter::new(File::create(
             Path::new(output_dir).join(Path::new("matrix.def")),
         )?);
-        wtr.write_all(self.matric_def)?;
+        let matrix = self.matrix();
+        write!(&mut wtr, "{} {}\n", matrix.l_size, matrix.r_size)?;
+        // the size of the matrix will be 193173 * 193173
+        for pair in matrix {
+            write!(&mut wtr, "{} {} {}\n", pair.0, pair.1, pair.2)?;
+        }
         wtr.flush()?;
         Ok(())
     }
