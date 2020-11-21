@@ -11,6 +11,7 @@ use super::error::Result;
 const UNK_DEF: &[u8] = include_bytes!("./static/unk.def");
 const CHAR_DEF: &[u8] = include_bytes!("./static/char.def");
 const DICRC: &[u8] = include_bytes!("./static/dicrc");
+const MATRIX: &[u8] = include_bytes!("./static/matrix.def");
 
 pub fn read_raw_file<P>(filename: P) -> Result<Vec<String>>
 where
@@ -83,6 +84,7 @@ pub struct Mecab<'a> {
     pub unk_def: &'static [u8],
     pub char_def: &'static [u8],
     pub dicrc: &'static [u8],
+    pub matrix: &'static [u8],
 }
 
 impl<'a> Mecab<'a> {
@@ -92,6 +94,7 @@ impl<'a> Mecab<'a> {
             unk_def: UNK_DEF,
             char_def: CHAR_DEF,
             dicrc: DICRC,
+            matrix: MATRIX,
         }
     }
 
@@ -173,15 +176,29 @@ impl<'a> Mecab<'a> {
     }
 
     fn to_matrix(&self, output_dir: &str) -> Result<()> {
+        // let mut wtr = io::LineWriter::new(File::create(
+        //     Path::new(output_dir).join(Path::new("matrix.def")),
+        // )?);
+        // let matrix = self.matrix();
+        // write!(&mut wtr, "{} {}\n", matrix.l_size, matrix.r_size)?;
+        // // the size of the matrix will be 193173 * 193173
+        // let mut i: u64 = 0;
+        // let all: u64 = 193173 * 193173;
+        // for pair in matrix {
+        //     write!(&mut wtr, "{} {} {}\n", pair.0, pair.1, pair.2)?;
+        //     if i % 1000000 == 0 {
+        //         println!("{}/{}",i,all);
+        //         wtr.flush()?;
+        //     }
+        //     i+=1;
+        // }
+        // wtr.flush()?;
+        // Ok(())
+        
         let mut wtr = io::LineWriter::new(File::create(
             Path::new(output_dir).join(Path::new("matrix.def")),
         )?);
-        let matrix = self.matrix();
-        write!(&mut wtr, "{} {}\n", matrix.l_size, matrix.r_size)?;
-        // the size of the matrix will be 193173 * 193173
-        for pair in matrix {
-            write!(&mut wtr, "{} {} {}\n", pair.0, pair.1, pair.2)?;
-        }
+        wtr.write_all(MATRIX)?;
         wtr.flush()?;
         Ok(())
     }

@@ -103,7 +103,7 @@ impl<'a> Lindera<'a> {
 
     fn build_cost_matrix(&self, output_dir: &str) -> Result<()> {
         let mut lines = Vec::new();
-        let matrix_def = std::str::from_utf8("".as_bytes())?;
+        let matrix_def = std::str::from_utf8(self.mecab.matrix)?;
         for line in matrix_def.lines() {
             let fields: Vec<i32> = line
                 .split_whitespace()

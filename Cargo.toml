@@ -5,8 +5,10 @@ authors = ["Minoru Osuka <minoru.osuka@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-lindera-core = { git = "https://github.com/you06/lindera", branch = "pub-functions" }
-lindera-ipadic-builder = { git = "https://github.com/you06/lindera", branch = "pub-functions" }
+# lindera-core = { git = "https://github.com/you06/lindera", branch = "pub-functions" }
+# lindera-ipadic-builder = { git = "https://github.com/you06/lindera", branch = "pub-functions" }
+lindera-core = { path = "../lindera/lindera-core" }
+lindera-ipadic-builder = { path = "../lindera/lindera-ipadic-builder" }
 clap = "2.33.3"
 regex = "1.4.1"
 unicode-segmentation = "1.6.0"
