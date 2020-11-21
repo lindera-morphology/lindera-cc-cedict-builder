@@ -195,7 +195,7 @@ impl<'a> Mecab<'a> {
         // }
         // wtr.flush()?;
         // Ok(())
-        
+
         let mut wtr = io::LineWriter::new(File::create(
             Path::new(output_dir).join(Path::new("matrix.def")),
         )?);
