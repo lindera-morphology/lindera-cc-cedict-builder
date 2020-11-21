@@ -153,6 +153,7 @@ impl<'a> Mecab<'a> {
         mecab
     }
 
+    #[allow(dead_code)]
     pub fn matrix(&self) -> Matrix {
         let size = self.words.len() as u32;
         Matrix {
