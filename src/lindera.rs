@@ -41,7 +41,7 @@ impl<'a> Lindera<'a> {
                 .push(WordEntry {
                     word_id: WordId(word_id as u32, true),
                     word_cost: word.word_cost as i16,
-                    cost_id: word.left_id as u16,
+                    cost_id: 0,
                 });
         }
 
