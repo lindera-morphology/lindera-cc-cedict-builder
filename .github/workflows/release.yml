@@ -50,7 +50,7 @@ jobs:
       - name: Build for Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          zip --junk-paths lindera-cc-cedic-builder-${{ matrix.target }}.zip target/${{ matrix.target }}/release/lindera-cc-cedict-builder
+          zip --junk-paths lindera-cc-cedict-builder-${{ matrix.target }}.zip target/${{ matrix.target }}/release/lindera-cc-cedict-builder
       - name: Build for Windows
         if: matrix.os == 'windows-latest'
         run: |
